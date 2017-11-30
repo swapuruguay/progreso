@@ -1,0 +1,100 @@
+<div class="container">
+<h2>Listado de socios</h2>
+<article id="formularios">
+<table class="table table-bordered table-condensed table-striped table-responsive">
+    <tr>
+        <th>Nro.</th><th>Nombre</th><th>Apellido</th><th>Categor&iacute;a</th><th>Saldo</th><th>Pago</th><th></th><th></th>
+    </tr>
+
+    <?php foreach($this->socios as $soc): ?>
+        <?php if($soc->getCategoria()->getImporte() > 0) : ?>
+            <?php if($soc->getSaldo() / $soc->getCategoria()->getImporte() >= 2 ) : ?>
+
+                    <tr>
+
+                    <td><?php echo $soc->getId(); ?></td>
+                    <td><?php echo $soc->getNombre(); ?></td>
+                    <td><?php echo $soc->getApellido(); ?></td>
+                    <td><?php echo $soc->getCategoria()->getNombre() ?></td>
+                    <td><?php echo $soc->getSaldo()-$soc->getCategoria()->getImporte(); ?></td>
+                    <td><a href="#" class="pago" id="<?php echo $soc->getId(); ?>" data-toggle="modal" data-target="#exampleModal">Pagar</a></td>
+                    <td><a href="<?php echo BASE_URL . 'socios/editar/' . $soc->getId(); ?>"><img src="<?php echo BASE_URL . 'views/layout/' .DEFAULT_LAYOUT .'/img/edit.png' ?>"></a></td>
+                    <td><a href="<?php echo BASE_URL . 'socios/confirmar/' . $soc->getId(); ?>"><img src="<?php echo BASE_URL . 'views/layout/' .DEFAULT_LAYOUT .'/img/delete.png' ?>"></a></td>
+
+
+                    </tr>
+
+            <?php endif ?>
+        <?php endif ?>
+    <?php endforeach; ?>
+</table>
+    </article>
+</div>
+<br>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Ajuste de Saldo</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="fecha" class="control-label">Fecha</label>
+            <input type="text" class="form-control" id="fecha">
+          </div>
+          <div class="form-group">
+            <label for="importe" class="control-label">Importe</label>
+            <input class="form-control" id="importe">
+            <input type="hidden" name="" id="oculto">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+        <button type="button" id="boton" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
+<script>
+  let filas = document.querySelectorAll('.pago')
+
+  let fecha = document.getElementById('fecha')
+  let oculto = document.getElementById('oculto')
+  let importe = document.getElementById('importe')
+
+  filas.forEach(row => {
+    row.addEventListener('click', function (evt) {
+      oculto.value = this.id
+
+    })
+  })
+
+  let guardar = document.getElementById('boton')
+  boton.addEventListener('click', function (evt) {
+    //let datos = {fecha: fecha.value, id: oculto.value, importe: importe.value}
+    fetch('/progreso/movimientos/ingresarPago', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      },
+
+      body: `id=${oculto.value}&fecha=${fecha.value}&importe=${importe.value}`
+    })
+    .then(function(response) {
+      console.log('response =', response);
+      return response.json();
+    })
+    .then(function(data) {
+      console.log('data = ', data)
+      $('#exampleModal').modal('hide')
+    })
+    .catch(function(err) {
+      //console.error(err);
+    })
+  })
+
+</script>
