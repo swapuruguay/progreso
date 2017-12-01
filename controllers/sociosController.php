@@ -115,7 +115,7 @@ class sociosController extends Controller{
                 if($modelo->save($socio)) {
                     $this->_view->mensaje = "Registro guardado";
                 }
-                
+
                 $this->_view->renderizar('resultado');
 
             } else {
@@ -216,7 +216,7 @@ class sociosController extends Controller{
         } else {
             $objeto = array('nombre' => 'No encontrado');
         }
-        echo json_encode($objeto);
+        echo json_encode($objeto, JSON_UNESCAPED_UNICODE);
     }
 
     public function eliminados($pag=0) {
