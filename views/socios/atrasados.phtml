@@ -13,8 +13,8 @@
                     <tr>
 
                     <td><?php echo $soc->getId(); ?></td>
-                    <td><?php echo $soc->getNombre(); ?></td>
-                    <td><?php echo $soc->getApellido(); ?></td>
+                    <td><?php echo utf8_decode($soc->getNombre()); ?></td>
+                    <td><?php echo utf8_decode($soc->getApellido()); ?></td>
                     <td><?php echo $soc->getCategoria()->getNombre() ?></td>
                     <td><?php echo $soc->getSaldo()-$soc->getCategoria()->getImporte(); ?></td>
                     <td><a href="#" class="pago" id="<?php echo $soc->getId(); ?>" data-toggle="modal" data-target="#exampleModal">Pagar</a></td>
