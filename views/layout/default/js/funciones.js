@@ -31,13 +31,13 @@ function buscae(){
     $("#tabla").html('<p><img src="/progreso/public/img/ajax.gif" />Buscando, espere...</p>');
     $.post('/progreso/socios/findSocios/0','texto='+cadena+'&active=0',
             function(respuesta) {
-                var texto = '<tr><th>Nro.</th><th>Nombre</th><th>Apellido</th><th>Activar</th></tr>';
+                var texto = '<tr><th>Nro.</th><th>Nombre</th><th>Apellido</th><th>Activar</th><th></th></tr>';
                 for(var i = 0; i < respuesta.length; i++){
 
                     texto+='<tr>';
                     texto+= '<td>'+respuesta[i].id_socio+'</td><td>'+utf8_decode(respuesta[i].nombre)+'</td><td>'+utf8_decode(respuesta[i].apellido)+'</td>';
                     texto+='<td><a href="/progreso/socios/activar/'+respuesta[i].id_socio+'"><img src="/progreso/views/layout/default/img/active.png"></a></td>';
-
+                    texto+= `<td><a href="/progreso/socios/editar/${respuesta[i].id_socio}"><img src="/progreso/views/layout/default/img/edit.png"></td>`
                     texto+= '</tr>';
                 }
 
