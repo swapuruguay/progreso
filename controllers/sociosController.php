@@ -308,9 +308,9 @@ class sociosController extends Controller{
                         $pdf->SetXY(20,$pos_y);
                         $pdf->Cell(10,4,$row[$it]->getId(),0,0);
                         $pdf->SetXY(30,$pos_y);
-                        $pdf->Cell(50,4,utf8_decode($row[$it]->getApellido()),0,0);
+                        $pdf->Cell(50,4,utf8_decode(utf8_decode($row[$it]->getApellido())),0,0);
                         $pdf->SetXY(90,$pos_y);
-                        $pdf->Cell(65,4,utf8_decode($row[$it]->getDomicilio()),0,0);
+                        $pdf->Cell(65,4,utf8_decode(utf8_decode($row[$it]->getDomicilio())),0,0);
                         $pdf->SetXY(160,$pos_y);
                         $pdf->Cell(10,4,substr($row[$it]->getCategoria()->__toString(),0,1),0,0);
                         $pos_y+=5;
