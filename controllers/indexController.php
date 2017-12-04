@@ -11,14 +11,21 @@
  *
  * @author walter
  */
+
 class indexController extends Controller {
-    
+
     public function __construct() {
         parent::__construct();
     }
-    
+
     public function index() {
-        $this->_view->titulo = NOMBRE;
-        $this->_view->renderizar('index');
+        if(Session::get('autenticado')) {
+          //echo Session::get('autenticado');
+          $this->_view->titulo = NOMBRE;
+          $this->_view->renderizar('index');
+        } else {
+          $this->redireccionar('login');
+        }
+
     }
 }

@@ -21,11 +21,15 @@ class movimientosController extends Controller{
     }
 
     public function index() {
+      if(!Session::get('autenticado')) {
+        $this->redireccionar('login');
+      }
         $this->_view->titulo = 'Titulo';
         $this->_view->renderizar('index');
     }
 
     public function getSaldo() {
+
         $socioModel = $this->loadModel('socios');
         $socio = $socioModel->getById($_POST['id']);
         $retorno = $this->_ajax->getMovimientosSocio($socio);
@@ -44,6 +48,9 @@ class movimientosController extends Controller{
     }
 
     public function pagar() {
+      if(!Session::get('autenticado')) {
+        $this->redireccionar('login');
+      }
         $this->_view->titulo = 'Titulo';
         $this->_view->renderizar('pagar');
     }
@@ -83,11 +90,17 @@ class movimientosController extends Controller{
 
 
     public function preprint() {
+      if(!Session::get('autenticado')) {
+        $this->redireccionar('login');
+      }
         $this->_view->titulo = 'Titulo';
         $this->_view->renderizar('formprint');
     }
 
     public function imprimir() {
+        if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+        }
         $mes = filter_input(INPUT_POST, 'mes', FILTER_SANITIZE_NUMBER_INT);
         $anio = filter_input(INPUT_POST, 'anio', FILTER_SANITIZE_NUMBER_INT);
 
@@ -157,6 +170,9 @@ class movimientosController extends Controller{
     }
 
     public function imprimir140() {
+        if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+        }
         $mes = filter_input(INPUT_POST, 'mes', FILTER_SANITIZE_NUMBER_INT);
         $anio = filter_input(INPUT_POST, 'anio', FILTER_SANITIZE_NUMBER_INT);
 
@@ -225,6 +241,9 @@ class movimientosController extends Controller{
 
 
     public function generar() {
+        if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+        }
         $this->_view->titulo = 'Titulo';
         $this->_view->renderizar('generar');
     }
@@ -271,6 +290,9 @@ class movimientosController extends Controller{
     }
 
     public function totales() {
+        if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+        }
         $this->_view->renderizar('totales');
     }
 
@@ -281,7 +303,9 @@ class movimientosController extends Controller{
     }
 
     public function listarec($mes, $anio) {
-
+        if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+        }
         $modelo = $this->loadModel('movimientos');
         $modelSocios = $this->loadModel('socios');
         $row = $modelo->getMes($anio, $mes);
@@ -346,6 +370,7 @@ class movimientosController extends Controller{
                 } else {
                     $pdf->SetY($pos_y + 20);
                     $tot = json_decode($this->getTotalesE($mes, $anio));
+
                     $totales = $tot[0]->importe+$tot[1]->importe;
 
                     $pdf->Cell(0,10, utf8_decode('Total Activos: ').$tot[0]->importe, 0, 0, 'C');

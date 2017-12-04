@@ -170,8 +170,8 @@ class movimientosModel extends Model{
     }
 
     public function getTotales($fecha) {
-        $sql = "SELECT COUNT(*) as cantidad,ABS(SUM(cuotas.importe)) AS importe, categorias.nombre as cat FROM cuotas,socios,categorias WHERE id_categoria=id_categoria_fk
-                  and id_socio=id_socio_fk and cuotas.importe < 0  and fecha_computo='$fecha' GROUP BY id_categoria_fk";
+        $sql = "SELECT COUNT(*) as cantidad,ABS(SUM(c.importe)) AS importe, cat.nombre as cat FROM cuotas c JOIN socios s ON s.id_socio = c.id_socio_fk
+                JOIN categorias cat ON cat.id_categoria = s.id_categoria_fk WHERE c.fecha_computo='$fecha' GROUP BY id_categoria_fk";
         $listado = $this->_db->query($sql);
         return  $listado->fetchall(PDO::FETCH_OBJ);
     }
