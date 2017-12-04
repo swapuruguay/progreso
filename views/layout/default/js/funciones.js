@@ -15,8 +15,8 @@ function cargar() {
 function busca(){
     var texto = $("#busqueda").val();
     if(texto != '') {
-    $("#tabla").html('<p><img src="/progreso/public/img/ajax.gif" />Buscando, espere...</p>');
-    $.post('/progreso/socios/findSocios/','texto='+texto+'&active=activo',
+    $("#tabla").html('<p><img src="/public/img/ajax.gif" />Buscando, espere...</p>');
+    $.post('/socios/findSocios/','texto='+texto+'&active=activo',
             escribe,'json');
 
     }  else {
@@ -28,16 +28,16 @@ function busca(){
 function buscae(){
     var cadena = $("#busquedae").val();
     if(cadena !== '') {
-    $("#tabla").html('<p><img src="/progreso/public/img/ajax.gif" />Buscando, espere...</p>');
-    $.post('/progreso/socios/findSocios/0','texto='+cadena+'&active=0',
+    $("#tabla").html('<p><img src="/public/img/ajax.gif" />Buscando, espere...</p>');
+    $.post('/socios/findSocios/0','texto='+cadena+'&active=0',
             function(respuesta) {
                 var texto = '<tr><th>Nro.</th><th>Nombre</th><th>Apellido</th><th>Activar</th><th></th></tr>';
                 for(var i = 0; i < respuesta.length; i++){
 
                     texto+='<tr>';
                     texto+= '<td>'+respuesta[i].id_socio+'</td><td>'+utf8_decode(respuesta[i].nombre)+'</td><td>'+utf8_decode(respuesta[i].apellido)+'</td>';
-                    texto+='<td><a href="/progreso/socios/activar/'+respuesta[i].id_socio+'"><img src="/progreso/views/layout/default/img/active.png"></a></td>';
-                    texto+= `<td><a href="/progreso/socios/editar/${respuesta[i].id_socio}"><img src="/progreso/views/layout/default/img/edit.png"></td>`
+                    texto+='<td><a href="/socios/activar/'+respuesta[i].id_socio+'"><img src="/views/layout/default/img/active.png"></a></td>';
+                    texto+= `<td><a href="/socios/editar/${respuesta[i].id_socio}"><img src="/views/layout/default/img/edit.png"></td>`
                     texto+= '</tr>';
                 }
 
@@ -55,8 +55,8 @@ function escribe(respuesta) {
     for(var i = 0; i < respuesta.length; i++){
         texto+='<tr>';
         texto+= '<td>'+respuesta[i].id_socio+'</td><td>'+utf8_decode(respuesta[i].nombre)+'</td><td>'+utf8_decode(respuesta[i].apellido)+'</td>';
-        texto+='<td><a href="/progreso/socios/editar/'+respuesta[i].id_socio+'"><img src="/progreso/views/layout/default/img/edit.png"></a></td>\n\
-        <td><a href="/progreso/socios/confirmar/'+respuesta[i].id_socio+'"><img src="/progreso/views/layout/default/img/delete.png"></a></td>';
+        texto+='<td><a href="/socios/editar/'+respuesta[i].id_socio+'"><img src="/views/layout/default/img/edit.png"></a></td>\n\
+        <td><a href="/socios/confirmar/'+respuesta[i].id_socio+'"><img src="/views/layout/default/img/delete.png"></a></td>';
         texto+= '</tr>';
     }
 
@@ -77,7 +77,7 @@ function escribeMov(respuesta) {
         }
         texto+='<tr>';
         texto+= '<td class="text-center">'+respuesta[i].fecha_computo+'</td><td class="text-center">'+txt+'</td><td class="text-right">'+respuesta[i].importe+'</td>';
-        texto+='<td class="text-center"><a id="'+respuesta[i].id_cuota+'" href="#" class="eliminar"><img src="/progreso/views/layout/default/img/delete.png"></a></td>';
+        texto+='<td class="text-center"><a id="'+respuesta[i].id_cuota+'" href="#" class="eliminar"><img src="/views/layout/default/img/delete.png"></a></td>';
         texto+= '</tr>';
     }
 
