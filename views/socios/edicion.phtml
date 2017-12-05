@@ -121,7 +121,7 @@
             $("#saldos").css('display', 'table-cell');
             var texto = $('#id').val()
             $("#ver").html(' <<< Ocultar saldo ');
-            $.post('/progreso/movimientos/getSaldo','id='+texto,
+            $.post('/movimientos/getSaldo','id='+texto,
                     escribeMov,'json');
 
         } else {
@@ -134,7 +134,7 @@
 $("#movs").on('click', '.eliminar', function(event) {
     event.preventDefault();
     var id = this.id;
-    $.post('/progreso/movimientos/eliminar','id='+id,
+    $.post('/movimientos/eliminar','id='+id,
                     escribeMov,'json');
 });
 
