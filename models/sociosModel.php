@@ -22,7 +22,7 @@ class sociosModel extends Model{
         $this->_modeloCategorias = new categoriasModel();
     }
 
-     public function getAll($orden = 'id_socio') {
+    public function getAll($orden = 'id_socio') {
 
         $listado = $this->_db->query("SELECT CONCAT(IFNULL(CONCAT(apellido, ' '),''),nombre) as apel,
         nombre, apellido, id_socio, domicilio, id_categoria_fk from socios where estado='A' order by ".$orden);
@@ -39,6 +39,49 @@ class sociosModel extends Model{
         return $arreglo;
 
     }
+
+    public function getAdelantos($orden = 'id_socio_fk') {
+        $sql = "SELECT a.*, s.nombre, s.apellido from adelantos a JOIN socios s ON s.id_socio = a.id_socio_fk order by ".$orden;
+        $consulta = $this->_db->query($sql);
+        $listado = $consulta->fetchall(PDO::FETCH_OBJ);
+        $arreglo = array();
+
+        foreach($listado as $valor) {
+            //$socio->setCategoria($this->_modeloCategorias->getById($valor->id_categoria_fk));
+            //$socio->setDomicilio($valor->domicilio);
+            $adelanto = array(
+              'nombre' => $valor->nombre,
+              'id' => $valor->id_adelanto,
+              'apellido' => $valor->apellido,
+              'id_socio_fk' => $valor->id_socio_fk,
+              'desde' => $valor->desde,
+              'hasta' => $valor->hasta
+            );
+            $arreglo[] = $adelanto;
+
+
+        }
+        return $arreglo;
+
+    }
+
+    public function getAdelanto($id) {
+        $sql = "SELECT a.*, s.nombre, s.apellido from adelantos a JOIN socios s ON s.id_socio = a.id_socio_fk WHERE id_adelanto = $id";
+        $consulta = $this->_db->query($sql);
+        $listado = $consulta->fetch(PDO::FETCH_OBJ);
+        $adelanto = array(
+              'nombre' => $listado->nombre,
+              'id' => $listado->id_adelanto,
+              'apellido' => $listado->apellido,
+              'id_socio_fk' => $listado->id_socio_fk,
+              'desde' => $listado->desde,
+              'hasta' => $listado->hasta
+            );
+
+
+            return $adelanto;
+        }
+
 
     public function getEliminados() {
 
@@ -112,7 +155,7 @@ class sociosModel extends Model{
 
     }
 
-    public function save(Socio $socio) {
+    public function save(Socio $socio, $usuario) {
         $datos = array(
 
             'nombre'            => $socio->getNombre(),
@@ -126,14 +169,15 @@ class sociosModel extends Model{
             'foto'              => $socio->getFoto(),
             'exento'            => $socio->getExento(),
             'estado'            => 'A',
-            'id_categoria_fk'   => $socio->getCategoria()->getId()
+            'id_categoria_fk'   => $socio->getCategoria()->getId(),
+            'usuario'           => $usuario
         );
         $sql = 'INSERT INTO socios ' . $this->preparaInsert($datos);
 
         return $this->_db->query($sql);
     }
 
-    public function update(Socio $socio) {
+    public function update(Socio $socio, $usuario) {
         $datos = array(
 
             'nombre'            => $socio->getNombre(),
@@ -145,7 +189,8 @@ class sociosModel extends Model{
             'fecha_ingreso'     => $socio->getFechaIngreso(),
             'email'             => $socio->getEmail(),
             'exento'            => $socio->getExento(),
-            'id_categoria_fk'   => $socio->getCategoria()->getId()
+            'id_categoria_fk'   => $socio->getCategoria()->getId(),
+            'usuario'           => $usuario
         );
         if($socio->getFoto()) {
             $datos['foto'] = $socio->getFoto();
@@ -160,15 +205,15 @@ class sociosModel extends Model{
         return new Socio(0, 'Nuevo', 'nuevo');
     }
 
-    public function delete(Socio $socio) {
-        $sql = "UPDATE socios SET estado='B' WHERE id_socio = ".$socio->getId();
+    public function delete(Socio $socio, $usuario) {
+        $sql = "UPDATE socios SET estado='B', usuario=$usuario WHERE id_socio = ".$socio->getId();
         return $this->_db->query($sql);
     }
 
     public function getAtrasados() {
         $listado = $this->_db->query("SELECT socios.id_socio,socios.nombre,
             socios.apellido, socios.id_categoria_fk,sum(importe) as importe FROM socios JOIN cuotas ON
-            cuotas.id_socio_fk = socios.id_socio WHERE socios.estado='A' group by id_socio having sum(importe) > 0 ORDER BY importe DESC, apellido");
+            cuotas.id_socio_fk = socios.id_socio WHERE socios.estado='A' group by id_socio ORDER BY importe DESC, apellido");
         $listado = $listado->fetchall(PDO::FETCH_OBJ);
         $arreglo = array();
         foreach($listado as $valor) {
@@ -188,7 +233,6 @@ class sociosModel extends Model{
         $arreglo = array();
         foreach($listado as $valor) {
             $soc = new Socio($valor->id_socio, $valor->nombre, $valor->apellido);
-            $soc->setFechaIngreso($valor->fecha_ingreso);
             $soc->setCategoria($this->_modeloCategorias->getById($valor->id_categoria_fk));
             $arreglo[] = $soc;
 
@@ -196,8 +240,8 @@ class sociosModel extends Model{
         return $arreglo;
     }
 
-    public function activar(Socio $socio) {
-        $sql = "UPDATE socios SET estado='A' WHERE id_socio = ".$socio->getId();
+    public function activar(Socio $socio, $usuario) {
+        $sql = "UPDATE socios SET estado='A', usuario = $usuario WHERE id_socio = ".$socio->getId();
         return $this->_db->query($sql);
     }
 

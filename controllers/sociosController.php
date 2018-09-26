@@ -28,7 +28,7 @@ class sociosController extends Controller{
 
     public function index() {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         //$modelo->getNroNuevo('socios');
@@ -38,9 +38,8 @@ class sociosController extends Controller{
 
     public function listar($pag=0) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
-
         $modelo  = $this->loadModel('socios');
         $this->_view->socios = $modelo->getAll();
         $totalRegistros = count($this->_view->socios);
@@ -65,7 +64,7 @@ class sociosController extends Controller{
 
     public function nuevo() {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modeloCat = $this->loadModel('categorias');
         $this->_view->categorias = $modeloCat->getAll();
@@ -74,9 +73,8 @@ class sociosController extends Controller{
     }
 
     public function editar($id) {
-
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $modeloCat = $this->loadModel('categorias');
@@ -90,7 +88,7 @@ class sociosController extends Controller{
 
     public function guardar() {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $modeloCat = $this->loadModel('categorias');
@@ -115,7 +113,7 @@ class sociosController extends Controller{
                     }
                 }
 
-                $socio->setExento(filter_input(INPUT_POST, 'exento', FILTER_DEFAULT));
+                $socio->setExento(isset($_POST['exento'])? 1 : 0);
                 $ingreso = filter_input(INPUT_POST ,'fecha_ingreso', FILTER_SANITIZE_STRING);
                 $ingreso = $this->cambiarfecha_mysql($ingreso);
                 $socio->setFechaIngreso($ingreso);
@@ -128,7 +126,7 @@ class sociosController extends Controller{
                 $id1 = $id['1'];
                 $socio->setEmail($_POST['email']);
                 $socio->setCategoria($modeloCat->getById($id1));
-                if($modelo->save($socio)) {
+                if($modelo->save($socio, Session::get('usuario')->id_usuario)) {
                     $this->_view->mensaje = "Registro guardado";
                 }
 
@@ -155,7 +153,7 @@ class sociosController extends Controller{
                 } else {
 
                 }
-                $socio->setExento(filter_input(INPUT_POST, 'exento', FILTER_DEFAULT));
+                $socio->setExento(isset($_POST['exento'])? 1 : 0);
                 $ingreso = filter_input(INPUT_POST ,'fecha_ingreso', FILTER_SANITIZE_STRING);
                 $ingreso = $this->cambiarfecha_mysql($ingreso);
                 $socio->setFechaIngreso($ingreso);
@@ -167,7 +165,7 @@ class sociosController extends Controller{
                 $id1 = $id['1'];
                 $socio->setEmail($_POST['email']);
                 $socio->setCategoria($modeloCat->getById($id1));
-                if($modelo->update($socio)) {
+                if($modelo->update($socio, Session::get('usuario')->id_usuario)) {
                     $this->_view->mensaje = "Registro guardado";
                 }
             }
@@ -178,7 +176,7 @@ class sociosController extends Controller{
 
     public function confirmar($id) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
@@ -188,11 +186,11 @@ class sociosController extends Controller{
 
     public function eliminar($id) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
-        if($modelo->delete($socio)) {
+        if($modelo->delete($socio, Session::get('usuario')->id_usuario)) {
             $this->_view->mensaje = "Registro eliminado con &eacute;xito";
         } else {
             $this->_view->mensaje = "No se pudo eliminar el socio intente m&aacute;s tarde";
@@ -204,7 +202,7 @@ class sociosController extends Controller{
 
     public function atrasados() {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo = $this->loadModel('socios');
         $this->_view->socios = $modelo->getAtrasados();
@@ -224,7 +222,7 @@ class sociosController extends Controller{
 
           $retorno = array('nombre' => 'Sin', 'apellido' => 'Resultados');
       }
-      echo json_encode($retorno);
+      echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
 
 
 
@@ -241,12 +239,12 @@ class sociosController extends Controller{
         } else {
             $objeto = array('nombre' => 'No encontrado');
         }
-        echo json_encode($objeto, JSON_UNESCAPED_UNICODE);
+        echo json_encode($objeto);
     }
 
     public function eliminados($pag=0) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $this->_view->socios = $modelo->getEliminados();
@@ -270,9 +268,18 @@ class sociosController extends Controller{
 
     }
 
+    public function listarAdelantos() {
+      if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+      }
+      $modelo  = $this->loadModel('socios');
+      $this->_view->socios = $modelo->getAdelantos();
+      $this->_view->renderizar('listar-adelantos');
+    }
+
     public function activar($id) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
@@ -282,11 +289,11 @@ class sociosController extends Controller{
 
     public function activarf($id) {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
-        if($modelo->activar($socio)) {
+        if($modelo->activar($socio, Session::get('usuario')->id_usuario)) {
             $this->_view->mensaje = "Socio activado con &eacute;xito";
         } else {
             $this->_view->mensaje = "No se pudo activar el socio intente m&aacute;s tarde";
@@ -298,15 +305,15 @@ class sociosController extends Controller{
 
     public function totales() {
         if(!Session::get('autenticado')) {
-          $this->redireccionar('login');
+            $this->redireccionar('login');
         }
         $this->_view->renderizar('totales');
     }
 
-     public function listarsocios() {
-         if(!Session::get('autenticado')) {
-           $this->redireccionar('login');
-         }
+    public function listarsocios() {
+        if(!Session::get('autenticado')) {
+            $this->redireccionar('login');
+        }
         $modelSocios = $this->loadModel('socios');
         $row = $modelSocios->getAll('apel');
         $registros = count($row);
@@ -385,4 +392,29 @@ class sociosController extends Controller{
             $pdf->Output();
 
     }
+
+    public function nuevoAdelanto() {
+
+          if(!Session::get('autenticado')) {
+              $this->redireccionar('login');
+          }
+          $this->_view->titulo = 'Titulo';
+          $this->_view->renderizar('nuevo-adelanto');
+    }
+
+    public function editarAdelanto($id) {
+
+      if(!Session::get('autenticado')) {
+          $this->redireccionar('login');
+      }
+
+      $modelo  = $this->loadModel('socios');
+      $adelanto = $modelo->getAdelanto($id);
+      $this->_view->adelanto = $adelanto;
+
+      $this->_view->renderizar('editar-adelanto');
+
+
+}
+
 }
