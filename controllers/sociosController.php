@@ -126,7 +126,7 @@ class sociosController extends Controller{
                 $id1 = $id['1'];
                 $socio->setEmail($_POST['email']);
                 $socio->setCategoria($modeloCat->getById($id1));
-                if($modelo->save($socio, Session::get('usuario')->id_usuario)) {
+                if($modelo->save($socio, Session::get('usuario')->idusuario)) {
                     $this->_view->mensaje = "Registro guardado";
                 }
 
@@ -165,7 +165,7 @@ class sociosController extends Controller{
                 $id1 = $id['1'];
                 $socio->setEmail($_POST['email']);
                 $socio->setCategoria($modeloCat->getById($id1));
-                if($modelo->update($socio, Session::get('usuario')->id_usuario)) {
+                if($modelo->update($socio, Session::get('usuario')->idusuario)) {
                     $this->_view->mensaje = "Registro guardado";
                 }
             }
