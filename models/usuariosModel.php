@@ -21,7 +21,7 @@ class usuariosModel extends Model{
     }
 
     public function cambiarPass($id, $password) {
-      $sql = "UPDATE usuarios SET password = '" . md5($password) ."' WHERE id_usuario=" . $id;
+      $sql = "UPDATE usuarios SET password = '" . md5($password) ."' WHERE idusuario=" . $id;
       //echo $sql;
       return $this->_db->query($sql);
     }
