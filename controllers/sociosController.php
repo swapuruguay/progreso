@@ -190,7 +190,7 @@ class sociosController extends Controller{
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
-        if($modelo->delete($socio, Session::get('usuario')->id_usuario)) {
+        if($modelo->delete($socio, Session::get('usuario')->idusuario)) {
             $this->_view->mensaje = "Registro eliminado con &eacute;xito";
         } else {
             $this->_view->mensaje = "No se pudo eliminar el socio intente m&aacute;s tarde";
