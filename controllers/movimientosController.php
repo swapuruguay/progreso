@@ -220,7 +220,7 @@ class movimientosController extends Controller{
                     $pdf->Cell(50,4, $row[$it]->importe, 0,0);
                     $pdf->SetXY(105,$pos_y + 27);
                     $pdf->Cell(50,4, $row[$it]->importe, 0,0);
-                    $pos_y+=74;
+                    $pos_y+=73;
                     $pdf->SetY($pos_y);
 
                     $it++;
