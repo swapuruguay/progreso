@@ -220,6 +220,10 @@ class movimientosController extends Controller{
                     $pdf->Cell(50,4, $row[$it]->importe, 0,0);
                     $pdf->SetXY(105,$pos_y + 27);
                     $pdf->Cell(50,4, $row[$it]->importe, 0,0);
+                   // $pdf->SetFont('Arial','B',8);
+                   // $pdf->SetXY(82, $pos_y + 40);
+                   // $pdf->Cell(90,4, '07/03/2020 baile de Carnaval con Palabras en vivo. Socios $200', 0,0);
+                    $pdf->SetFont('Arial','',8);
                     $pos_y+=73;
                     $pdf->SetY($pos_y);
 

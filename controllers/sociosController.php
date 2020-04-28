@@ -293,7 +293,7 @@ class sociosController extends Controller{
         }
         $modelo  = $this->loadModel('socios');
         $socio = $modelo->getById($id);
-        if($modelo->activar($socio, Session::get('usuario')->id_usuario)) {
+        if($modelo->activar($socio, Session::get('usuario')->idusuario)) {
             $this->_view->mensaje = "Socio activado con &eacute;xito";
         } else {
             $this->_view->mensaje = "No se pudo activar el socio intente m&aacute;s tarde";
