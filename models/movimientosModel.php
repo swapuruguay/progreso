@@ -134,9 +134,10 @@ class movimientosModel extends Model{
     }
 
     public function generarMes($socios, $mes, $anio) {
+        $dia = $this->_lastDay($mesRaw);
         foreach($socios as $s) {
             $result = $this->_db->query("SELECT * FROM adelantos WHERE id_socio_fk"
-                    . " = ".$s->getId()." AND desde <= '".$anio."-".$mes."-01' AND hasta >='".$anio."-".$mes."-31'");
+                    . " = ".$s->getId()." AND desde <= '".$anio."-".$mes."-01' AND hasta >='".$anio."-".$mes."-".$dia."'");
             if(!$result->fetchall(PDO::FETCH_OBJ)) {
                 $fecha = date('Y-m', strtotime($s->getFechaIngreso()));
                 //$anio = 1970;
@@ -174,6 +175,24 @@ class movimientosModel extends Model{
                 JOIN categorias cat ON cat.id_categoria = s.id_categoria_fk WHERE c.fecha_computo='$fecha' GROUP BY id_categoria_fk";
         $listado = $this->_db->query($sql);
         return  $listado->fetchall(PDO::FETCH_OBJ);
+    }
+
+    private function _lastDay($month) {
+        switch ($month) {
+            case 1: return 31;
+            case 2: return 28;
+            case 3: return 31;
+            case 4: return 30;
+            case 5: return 31;
+            case 6: return 30;
+            case 7: return 31;
+            case 8: return 31;
+            case 9: return 30;
+            case 10: return 31;
+            case 11: return 30;
+            case 12: return 31;
+        }
+        return 0;
     }
 
 

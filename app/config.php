@@ -2,7 +2,7 @@
 
 define ('DEFAULT_CONTROLLER', 'index');
 define('DEFAULT_LAYOUT', 'default');
-define ('BASE_URL', 'https://progreso.destinosuruguay.com.uy/');
+define ('BASE_URL', 'http://progreso.com/');
 define('NOMBRE', 'Club Social Progreso');
 
 define('DB_HOST','localhost');

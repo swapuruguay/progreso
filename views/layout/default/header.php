@@ -33,8 +33,10 @@
                         <?php
                             if(Session::get('usuario')->perfil == 1) {
                               include APP_PATH . 'menus/menuAdmin.php';
-                            } else {
+                            } else if(Session::get('usuario')->perfil == 1) {
                               include APP_PATH . 'menus/menuUsuario.php';
+                            } else {
+                              include APP_PATH . 'menus/menuCobrador.php';
                             }
                         ?>
 
