@@ -299,7 +299,7 @@ class movimientosController extends Controller{
 
     }
 
-    public function listarec($mes, $anio, $dire) {
+    public function listarec($mes, $anio, $dire=3) {
         if(!Session::get('autenticado')) {
             $this->redireccionar('login');
         }
@@ -368,13 +368,14 @@ class movimientosController extends Controller{
                 } else {
                     $pdf->SetY($pos_y + 20);
                     $tot = json_decode($this->getTotalesE($mes, $anio, $dire));
-                    $totales = $tot[0]->importe+$tot[1]->importe+$tot[2]->importe;
+                    //print_r($tot);
+                    $totales = $tot[0]->importe+$tot[1]->importe;
 
                     $pdf->Cell(0,10, utf8_decode('Total Activos: $').$tot[0]->importe, 0, 0, 'C');
                     $pdf->SetY($pos_y + 25);
                     $pdf->Cell(0,10, utf8_decode('Total Cadetes: $').$tot[1]->importe, 0, 0, 'C');
                     $pdf->SetY($pos_y + 30);
-                    $pdf->Cell(0,10, utf8_decode('Total Jubilados: $').$tot[2]->importe, 0, 0, 'C');
+                    //$pdf->Cell(0,10, utf8_decode('Total Jubilados: $').$tot[2]->importe, 0, 0, 'C');
                     $pdf->SetY($pos_y + 35);
                     $pdf->Cell(0,10, utf8_decode('Total General: $').$totales, 0, 0, 'C');
 
@@ -467,7 +468,7 @@ class movimientosController extends Controller{
 
     private function getTotalesE($mes, $anio, $dire) {
 
-        $retorno = $this->_ajax->getTotales($anio.'-'.$mes.'-01', $dire);
+        $retorno = $this->_ajax->getTotales($anio.'-'.$mes.'-01');
         return json_encode($retorno);
     }
 

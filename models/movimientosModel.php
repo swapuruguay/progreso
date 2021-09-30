@@ -129,18 +129,19 @@ class movimientosModel extends Model{
 
     }
 
-    public function getMes($anio, $mes, $dire=3) {
+    public function getMes($anio, $mes, $dire) {
         //$fogon = ($dire == 1)? ' LIKE ': ' NOT LIKE ';
         $fogon = '';
         if($dire == 1) {
-            $fogon = " AND s.domicilio LIKE '%fog%'";
+            $fogon = " AND s.domicilio LIKE '%prog%'";
         } elseif($dire == 2) {
-            $fogon = " AND s.domicilio NOT LIKE '%fog%'";
+            $fogon = " AND s.domicilio NOT LIKE '%prog%'";
         }
 
         $sql = "SELECT c.mes, c.anio, c.importe, s.nombre, s.apellido, s.id_socio, c.id_socio_fk FROM cuotas c JOIN socios s ON 
                 s.id_socio = c.id_socio_fk WHERE fecha_computo= '$anio-".$mes."-01' $fogon  AND importe > 0";
         $listado = $this->_db->query($sql);
+        //echo $sql;
         return  $listado->fetchall(PDO::FETCH_OBJ);
     }
 
@@ -191,19 +192,27 @@ class movimientosModel extends Model{
 
     }
 
-    public function getTotales($fecha, $dire=3) {
-        $fogon = '';
-        if($dire == 1) {
-            $fogon = " AND socios.domicilio LIKE '%fog%'";
-        } elseif($dire == 2) {
-            $fogon = " AND socios.domicilio NOT LIKE '%fog%'";
-        }
-        $sql = "SELECT COUNT(*) as cantidad,ABS(SUM(cuotas.importe)) AS importe, categorias.nombre as cat FROM cuotas 
-                JOIN socios ON id_socio=id_socio_fk JOIN categorias ON id_categoria=id_categoria_fk WHERE 
-                fecha_computo='$fecha' $fogon GROUP BY id_categoria_fk";
+    // public function getTotales($fecha, $dire=3) {
+    //     $fogon = '';
+    //     if($dire == 1) {
+    //         $fogon = " AND socios.domicilio LIKE '%prog%'";
+    //     } elseif($dire == 2) {
+    //         $fogon = " AND socios.domicilio NOT LIKE '%prog%'";
+    //     }
+    //     $sql = "SELECT COUNT(*) as cantidad,ABS(SUM(cuotas.importe)) AS importe, categorias.nombre as cat FROM cuotas 
+    //             JOIN socios ON id_socio=id_socio_fk JOIN categorias ON id_categoria=id_categoria_fk WHERE 
+    //             fecha_computo='$fecha' $fogon GROUP BY id_categoria_fk";
+    //     $listado = $this->_db->query($sql);
+    //     return  $listado->fetchall(PDO::FETCH_OBJ);
+    // }
+    public function getTotales($fecha) {
+        $sql = "SELECT COUNT(*) as cantidad,ABS(SUM(c.importe)) AS importe, cat.nombre as cat FROM cuotas c JOIN socios s ON s.id_socio = c.id_socio_fk
+                JOIN categorias cat ON cat.id_categoria = s.id_categoria_fk WHERE c.fecha_computo='$fecha' GROUP BY id_categoria_fk";
         $listado = $this->_db->query($sql);
         return  $listado->fetchall(PDO::FETCH_OBJ);
     }
+
+
 
 
 }
